@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <!-- meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" -->
-    <meta http-equiv="Content-Security-Policy" content="default-src *; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <!-- meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; script-src 'self'" -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <title>Bidang Miring Application</title>
     <!-- Stylesheets -->
@@ -46,7 +46,7 @@
           </div>
         </div>
       </header>
-      <!-- Your app's content goes inside .window-content -->
+      <!-- App's content goes inside .window-content -->
       <div class="window-content">
         <div class="pane-group">
           <!-- Panel group -->
@@ -95,9 +95,9 @@
                 </div>
               </div>
               <div id="tab-plot" class="col-group padded">
-                <div id="plot-data" style="width:100%;margin-top:20px;"></div>
+                <div id="plot-data" class="plot-container"></div>
               </div>
-              <!-- div id="tab-data" class="col-group">
+              <div id="tab-data" class="col-group">
                 <table id="table-data" class="table-striped">
                   <thead>
                     <tr>
@@ -109,7 +109,7 @@
                   </thead>
                   <tbody></tbody>
                 </table>
-              </div -->
+              </div>
             </div>
             <div id="container-preferences" class="container">
               <div class="tab-group">
@@ -200,8 +200,7 @@
     </div>
     <!-- You can also require other files to run in this process -->
     <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="./assets/js/plotly.js"></script>
-    <script type="text/javascript" src="./assets/js/regression.min.js"></script>
+    <script src="./assets/js/plotly.min.js"></script>
     <script src="./renderer.js"></script>
   </body>
 </html>
