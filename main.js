@@ -10,7 +10,7 @@ const Store = require('electron-store')
 const store = new Store()
 
 // store.set('unicorn', '🦄')
-// console.log(store.get('unicorn'))
+// console.log('Unicorn Stored ', store.get('unicorn'))
 
 // Initiate socket, timeout prop, userid, connection string and iniate serialPortLists
 var socket
@@ -114,7 +114,7 @@ ipcMain.on('toMain', (event, args) => {
   if (args.state === 'reload list') {
     serialPortLists = []
   } else if (args.state === 'preferences val') {
-    console.log(args.val)
+    console.log('Args Value ', args.val)
     try {
       store.set('serialport', args.val.serialport)
       store.set('baudrate', args.val.baudrate)
@@ -123,15 +123,15 @@ ipcMain.on('toMain', (event, args) => {
         value: 'Preferences Saved'
       })
     } catch (error) {
-      console.log(error)
+      console.log('Error ', error)
       mainWindow.webContents.send('fromMain', {
         elementid: 'notification',
         value: 'Failed to Save Preferences'
       })
     }
   } else if (args.state === 'check preferences') {
-    console.log(store.get('serialport'))
-    console.log(store.get('baudrate'))
+    console.log('Serial Port ', store.get('serialport'))
+    console.log('Baud Rate ', store.get('baudrate'))
     if (store.get('serialport') && store.get('baudrate')) {
       mainWindow.webContents.send('fromMain', {
         elementid: 'container-preferences',
@@ -145,6 +145,7 @@ ipcMain.on('toMain', (event, args) => {
     if (store.get('serialport')) {
       if (serialPort) {
         if (serialPort.isOpen) {
+          serialPort.flush()
           serialPort.close()
         }
         serialPort = new SerialPort(store.get('serialport'), {
@@ -195,6 +196,7 @@ ipcMain.on('toMain', (event, args) => {
     if (store.get('serialport')) {
       if (serialPort) {
         if (serialPort.isOpen) {
+          serialPort.flush()
           serialPort.close()
         }
         serialPort = new SerialPort(store.get('serialport'), {
@@ -240,6 +242,13 @@ ipcMain.on('toMain', (event, args) => {
         elementid: 'notification',
         value: 'Please Select Serial Port First in Preferences'
       })
+    }
+  } else if (args.state === 'reset value') {
+    if (serialPort) {
+      if (serialPort.isOpen) {
+        console.log('Send Signal Reset (R)')
+        serialPort.write('R')
+      }
     }
   }
 })

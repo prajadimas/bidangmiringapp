@@ -11,6 +11,8 @@ $(document).ready(function () {
   var elDetached = null;
   var numberOfSensor = 0;
   var sensor = [];
+  var dataNumber = 0;
+  var regClicked = 0;
   var dataTemp = [];
   var dataRegXY = [];
   var regX = [];
@@ -36,22 +38,14 @@ $(document).ready(function () {
           $("#serialport").html("");
           serialPortLists = data.value;
           data.value.forEach((item, idx) => {
-            console.log(item);
+            // console.log("Data Value: ", item);
             if (item.manufacturer) {
-              // var o = new Option(item.manufacturer + "(" + item.path + ")", item.path);
-              /// jquerify the DOM object "o" so we can use the html method
-              // $(o).html(item.manufacturer + "(" + item.path + ")");
-              // $("#serialport").append(o);
               if (item.manufacturer.toLowerCase().includes("arduino")) {
                 $("#" + data.elementid).append("<li class=\"list-group-item\"><img class=\"img-circle media-object pull-left\" src=\"./assets/img/arduino-icon.png\" width=\"32\" height=\"32\"><div class=\"media-body\"><strong>" + item.manufacturer + "</strong><p>" + item.path + "</p></div></li>");
               } else {
                 $("#" + data.elementid).append("<li class=\"list-group-item\"><img class=\"img-circle media-object pull-left\" src=\"./assets/img/serialport-icon.png\" width=\"32\" height=\"32\"><div class=\"media-body\"><strong>" + item.manufacturer + "</strong><p>" + item.path + "</p></div></li>");
               }
             } else {
-              // var o = new Option("- (" + item.path + ")", item.path);
-              /// jquerify the DOM object 'o' so we can use the html method
-              // $(o).html("- (" + item.path + ")");
-              // $("#serialport").append(o);
               $("#" + data.elementid).append("<li class=\"list-group-item\"><img class=\"img-circle media-object pull-left\" src=\"./assets/img/serialport-icon.png\" width=\"32\" height=\"32\"><div class=\"media-body\"><strong>-</strong><p>" + item.path + "</p></div></li>")
             }
           })
@@ -59,18 +53,17 @@ $(document).ready(function () {
           // Serialport lists for preferences
           serialPortPathSelected = null;
           $("#serialport-list .list-group-item").each(function () {
-            console.log($(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
+            // console.log("Serial Port Path: ", $(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
             $(this).removeClass("active");
             if ($(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")) === preferences.serialport) {
-              console.log(true);
               $(this).addClass("active");
               serialPortPathSelected = $(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>"));
             }
           });
           // Serialport selection handler
           $("#serialport-list .list-group-item").click(function (evt) {
-            // console.log($(this));
-            console.log($(this)[0].innerHTML.substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
+            // console.log("This #serialport-list: ", $(this));
+            // console.log("Serial Port Path: ", $(this)[0].innerHTML.substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
             $(".list-group-item").each(function () {
               $(this).removeClass("active");
             });
@@ -81,10 +74,10 @@ $(document).ready(function () {
           $("#serialport-search").keyup(function () {
             serialPortPathSelected = null;
             $("#serialport-list .list-group-item").detach();
-            // console.log(elDetached);
+            // console.log("Detached Element: ", elDetached);
     				if ($(this).val().length > 0) {
               serialPortLists.map((item, idx) => {
-                console.log(item);
+                // console.log("Serial Port List: ", item);
                 if (item.path.toLowerCase().includes($(this).val().toLowerCase())) {
                   if (item.manufacturer) {
                     if (item.manufacturer.toLowerCase().includes("arduino")) {
@@ -102,18 +95,17 @@ $(document).ready(function () {
             }
             // Serialport lists for preferences
             $("#serialport-list .list-group-item").each(function () {
-              console.log($(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
+              // console.log("Serial Port Path: ", $(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
               $(this).removeClass("active");
               if ($(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")) === preferences.serialport) {
-                console.log(true);
                 $(this).addClass("active");
                 serialPortPathSelected = $(this).html().substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>"));
               }
             });
             // Serialport selection handler
             $("#serialport-list .list-group-item").click(function (evt) {
-              // console.log($(this));
-              console.log($(this)[0].innerHTML.substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
+              // console.log("This #serialport-list: ", $(this));
+              // console.log("Serial Port Path: ", $(this)[0].innerHTML.substring($(this).html().indexOf("<p>") + 3, $(this).html().indexOf("</p>")));
               $(".list-group-item").each(function () {
                 $(this).removeClass("active");
               });
@@ -123,16 +115,16 @@ $(document).ready(function () {
           });
         }
       } else if (data.elementid === "container-preferences") {
-        console.log(data.value);
+        console.log("Data Value: ", data.value);
         preferences = data.value;
         $("#baudrate").val(data.value.baudrate);
       } else if (data.elementid === "notification") {
-        console.log(data.value);
+        console.log("Data Value: ", data.value);
         document.getElementById("modal-notification").close();
         $("#notification-content").html(data.value);
         document.getElementById("modal-notification").showModal();
       } else if (data.elementid === "sensor-stat") {
-        console.log(data.value);
+        console.log("Data Value: ", data.value);
         if (isNaN(data.value)) {
           document.getElementById("modal-notification").close();
           $("#notification-content").html(data.value);
@@ -167,10 +159,12 @@ $(document).ready(function () {
             console.log("Data: ", s);
             if (r.length > 0) {
               var tempDataXY = [];
+              dataNumber++;
               sbx.push((new Date(s[0].timestamp).getTime() - new Date(reference[0].timestamp).getTime())/1000.);
               sby.push(Number(r[0].dist));
               tempDataXY.push((new Date(s[0].timestamp).getTime() - new Date(reference[0].timestamp).getTime())/1000.);
               tempDataXY.push(Number(r[0].dist));
+              $("#table-data tbody").append("<tr><td>" + dataNumber.toString() + "</td><td>" + new Date(s[0].timestamp).getTime().toString() + "</td><td>" + ((new Date(s[0].timestamp).getTime() - new Date(reference[0].timestamp).getTime())/1000.).toString() + "</td><td>" + r[0].dist + "</td></tr>");
               console.log("Sb.X: ", sbx);
               console.log("Sb.Y: ", sby);
               console.log("TempXY: ", tempDataXY);
@@ -196,7 +190,62 @@ $(document).ready(function () {
                   }
                 },
               };
-              Plotly.newPlot("plot-data", [trace], layout);
+              var config = {
+                responsive: true,
+                scrollZoom: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ["zoom2d","pan2d","select2d","lasso2d","toggleSpikelines","resetScale2d"],
+                modeBarButtonsToAdd: [{
+                  name: "Draw regression",
+                  icon: Plotly.Icons["drawline"],
+                  click: function (gd) {
+                    regX = [];
+                    regY = [];
+                    // console.log("Plot Div: ", gd);
+                    var result = window.regression.linear(dataRegXY);
+                    var xMax = Math.ceil(Math.max.apply(null, sbx));
+                    var xMin = Math.floor(Math.min.apply(null, sbx));
+                    for (var i = xMin * 100; i <= xMax * 100; i++) {
+                      regX.push(i/100);
+                      regY.push((result.equation[0] * i/100) + result.equation[1]);
+                    }
+                    document.getElementById("modal-notification").close();
+                    $("#notification-content").html(result.string);
+                    document.getElementById("modal-notification").showModal();
+                    if (regClicked > 0) {
+                      if (gd.data.length > 1) {
+                        Plotly.deleteTraces(gd, [-1]);
+                        Plotly.addTraces(gd, {
+                          x: regX,
+                          y: regY,
+                          mode: 'lines',
+                          type: 'scatter',
+                          name: 'Regression'
+                        });
+                      } else {
+                        Plotly.addTraces(gd, {
+                          x: regX,
+                          y: regY,
+                          mode: 'lines',
+                          type: 'scatter',
+                          name: 'Regression'
+                        });
+                      }
+                      // Plotly.deleteTraces(gd, [-1]);
+                    } else {
+                      Plotly.addTraces(gd, {
+                        x: regX,
+                        y: regY,
+                        mode: 'lines',
+                        type: 'scatter',
+                        name: 'Regression'
+                      });
+                      regClicked++
+                    }
+                  }
+                }]
+              };
+              Plotly.newPlot("plot-data", [trace], layout, config);
             }
           } else {
             document.getElementById("modal-notification").close();
@@ -221,12 +270,11 @@ $(document).ready(function () {
   // Button event to submit preferences
   $("#submit-preferences").click(function (evt) {
     evt.preventDefault();
-    console.log(serialPortPathSelected);
-    console.log($("#baudrate").val());
+    console.log("Serial Port Selected: ", serialPortPathSelected);
+    console.log("Baud Rate Selected: ", $("#baudrate").val());
     if (serialPortPathSelected && $("#baudrate").val()) {
       window.api.send("toMain", { state: "preferences val", val: { serialport: serialPortPathSelected, baudrate: Number($("#baudrate").val()) } });
     } else {
-      console.log("Please, at least select one preferences");
       document.getElementById("modal-notification").close();
       $("#notification-content").html("Please, at Least Select One Preferences");
       document.getElementById("modal-notification").showModal();
@@ -234,7 +282,7 @@ $(document).ready(function () {
   });
   // Button event to navigate between menu list
   $(".nav-group-item").click(function (evt) {
-    console.log($(this));
+    console.log("This .nav-group-item: ", $(this));
     $("#footer-toolbar").html("");
     $(".list-group-item").each(function () {
       $(this).removeClass("active");
@@ -255,7 +303,28 @@ $(document).ready(function () {
       });
     } else if ($(this)[0].id.split("-")[1] === "experiment") {
       window.api.send("toMain", { state: "experiment data" });
-      $("#footer-toolbar").html("<button class=\"btn btn-negative\">Reset</button>");
+      if ($("#menutab-data").hasClass("active")) {
+        $("#tab-plot").hide();
+        $("#tab-data").show();
+      } else if ($("#menutab-plot").hasClass("active")) {
+        $("#tab-data").hide();
+        $("#tab-plot").show();
+      }
+      $("#footer-toolbar").html("<button id=\"reset-data\" class=\"btn btn-negative\">Reset</button>");
+      // Reset Data
+      $("#reset-data").click(function (evt) {
+        $("#plot-data").html("");
+        $("#table-data tbody").html("");
+        dataNumber = 0;
+        regClicked = 0;
+        dataTemp = [];
+        dataRegXY = [];
+        regX = [];
+        regY = [];
+        sbx = [];
+        sby = [];
+        window.api.send("toMain", { state: "reset value" });
+      });
     } else if ($(this)[0].id.split("-")[1] === "preferences") {
       dataTemp = [];
       window.api.send("toMain", { state: "reload list" });
@@ -277,10 +346,10 @@ $(document).ready(function () {
   // Submit modal for adding sensor
   $("#sensor-submit").click(function (evt) {
     evt.preventDefault();
-    console.log(numberOfSensor);
-		console.log($("#sensor-num").val());
-    console.log($("#sensor-signal").val());
-		console.log($("#sensor-dist").val());
+    console.log("Number of Sensor: ", numberOfSensor);
+		console.log("Sensor Number: ", $("#sensor-num").val());
+    console.log("Sensor Signal: ", $("#sensor-signal").val());
+		console.log("Sensor Distance: ", $("#sensor-dist").val());
     // window.api.send("toMain", { state: "cookies store" });
     sensor.push({
       name: $("#sensor-num").val(),
@@ -293,7 +362,7 @@ $(document).ready(function () {
     // Remove listener for sensor
     $("#" + numberOfSensor.toString() + "del").click(function (evt) {
       if (Number(this.id.replace("del", "")) == numberOfSensor) {
-        console.log($(this).closest("tr"));
+        console.log("Closest <tr>: ", $(this).closest("tr"));
         sensor.pop();
         numberOfSensor = sensor.length;
         $("#sensor-num").val(numberOfSensor + 1);
@@ -305,5 +374,19 @@ $(document).ready(function () {
       }
     });
     document.getElementById("modal-sensor").close();
+  });
+  // Open tab for display plot
+  $("#menutab-plot").click(function (evt) {
+    $("#menutab-data").removeClass("active");
+    $("#menutab-plot").addClass("active");
+    $("#tab-data").hide();
+    $("#tab-plot").show();
+  });
+  // Open tab for display table data
+  $("#menutab-data").click(function (evt) {
+    $("#menutab-plot").removeClass("active");
+    $("#menutab-data").addClass("active");
+    $("#tab-plot").hide();
+    $("#tab-data").show();
   });
 });

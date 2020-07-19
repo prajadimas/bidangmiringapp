@@ -30,3 +30,5 @@ contextBridge.exposeInMainWorld('api', {
     }
   }
 })
+
+contextBridge.exposeInMainWorld('regression', require('regression'))
