@@ -1,0 +1,22 @@
+/* Dialog ------------------------ */
+
+dialog {
+  padding: 0;
+  border: 1px solid #bebebe;
+  border-radius: 6px;
+  box-shadow: 0 0 30px rgba(0,0,0,.1);
+  overflow: hidden;
+
+  &.alert {
+    top: 22px;
+    padding: 10px 20px;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.2);
+    background: #F6F6F6;
+
+    &::backdrop {
+      top: 22px;
+    }
+  }
+}
