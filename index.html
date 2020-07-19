@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" -->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Bidang Miring Application</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="./assets/css/photon.min.css">
+    <link rel="stylesheet" href="./assets/css/about.css">
+    <link rel="stylesheet" href="./assets/css/dialog.css">
+  </head>
+  <body>
+    <div id="about-modal" class="about">
+      <div class="about-wrapper">
+        <header class="about-header">
+          <img class="about-logo" src="./assets/img/logogram.png" alt="4DS Edu">
+        </header>
+        <main class="about-sections">
+          <section class="about-section about-code">
+            <h2>Getting Started</h2>
+            <p>This application should be included in the bundle of Bidang Miring Product released by 4DS Edu and compatible with any version of it.</p>
+            <p>If you have any question or technical difficulties or found some bugs in using this application, feel free to contact us by email to support@quadran4ds.com.</p>
+          </section>
+          <footer class="about-section footer">
+            <div class="rainbow-button-wrapper">
+              <button id="get-started" class="about-button modal-hide">Get Started</button>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </div>
+    <div id="window-app" class="window">
+      <!-- .toolbar-header sits at the top of your app -->
+      <header class="toolbar toolbar-header">
+        <div class="toolbar-actions">
+          <div class="btn-group">
+            <button id="get-about" class="btn btn-default">
+              <span class="icon icon-home"></span>
+            </button>
+            <button class="btn btn-default active">
+              <span class="icon icon-window"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <!-- Your app's content goes inside .window-content -->
+      <div class="window-content">
+        <div class="pane-group">
+          <!-- Panel group -->
+          <div class="pane pane-sm sidebar">
+            <nav class="nav-group">
+              <h5 class="nav-group-title">Menu</h5>
+              <span id="menu-preparation" class="nav-group-item active">
+                <span class="icon icon-tools"></span>
+                Preparation
+              </span>
+              <span id="menu-experiment" class="nav-group-item">
+                <span class="icon icon-clipboard"></span>
+                Experiment
+              </span>
+              <span id="menu-preferences" class="nav-group-item">
+                <span class="icon icon-cog"></span>
+                Preferences
+              </span>
+            </nav>
+          </div>
+          <!-- Panel group -->
+          <div class="pane">
+            <div id="container-preparation" class="container">
+              <div class="col-group">
+                <table id="sensor-prop" class="table-striped">
+                  <thead>
+                    <tr>
+                      <th>Sensor</th>
+                      <th>Signal</th>
+                      <th>Distance from First Sensor (cm)</th>
+                      <th class="text-center">Status</th>
+                      <th class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="container-experiment" class="container">
+              <div class="tab-group">
+                <div id="menutab-plot" class="tab-item active">
+                  Plot
+                </div>
+                <div id="menutab-data" class="tab-item">
+                  Data
+                </div>
+              </div>
+              <div id="tab-plot" class="col-group padded">
+                <div id="plot-data" style="width:100%;margin-top:20px;"></div>
+              </div>
+              <!-- div id="tab-data" class="col-group">
+                <table id="table-data" class="table-striped">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Timestamp</th>
+                      <th>Time Different (s)</th>
+                      <th>Distance from First Sensor (cm)</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div -->
+            </div>
+            <div id="container-preferences" class="container">
+              <div class="tab-group">
+                <div id="menutab-serialport" class="tab-item active">
+                  Serial Port
+                </div>
+                <div id="menutab-personalization" class="tab-item">
+                  Personalization&nbsp;
+                  <button class="active btn btn-mini btn-default">
+                    <span class="icon icon-tools"></span>
+                  </button>
+                </div>
+                <div id="menutab-virtualab" class="tab-item">
+                  4DS VirtuaLab&nbsp;
+                  <button class="active btn btn-mini btn-default">
+                    <span class="icon icon-tools"></span>
+                  </button>
+                </div>
+              </div>
+              <div id="tab-serialport" class="col-group">
+                <form class="padded">
+                  <div class="form-group">
+                    <label>Port Name</label>
+                    <ul id="serialport-list" class="list-group">
+                      <li class="list-group-header">
+                        <input id="serialport-search" class="form-control" type="text" placeholder="Filter Path">
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="form-group">
+                    <label>Baud Rate</label>
+                    <select id="baudrate" class="form-control">
+                      <option value="9600">9600</option>
+                      <option value="14400">14400</option>
+                      <option value="19200">19200</option>
+                      <option value="38400">38400</option>
+                      <option value="57600">57600</option>
+                      <option value="115200">115200</option>
+                    </select>
+                  </div>
+                  <div class="form-actions">
+                    <button id="submit-preferences" type="submit" class="btn btn-form btn-large btn-primary">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <dialog id="modal-sensor">
+        <div class="col-group">
+          <form class="padded">
+            <div class="form-group">
+              <label>Sensor</label>
+              <input id="sensor-num" type="text" class="form-control" placeholder="Sensor" value="1" readonly>
+            </div>
+            <div class="form-group">
+              <label>Signal</label>
+              <input id="sensor-signal" type="text" class="form-control" placeholder="Signal" value="100">
+            </div>
+            <div class="form-group">
+              <label>Distance from First Sensor (cm)</label>
+              <input id="sensor-dist" type="text" class="form-control" placeholder="Distance" value="0">
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-form btn-default modal-exit">Cancel</button>
+              <button id="sensor-submit" class="btn btn-form btn-primary pull-right">Save</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
+      <dialog id="modal-notification" class="alert">
+        <div id="notification-content" class="col-group padded"></div>
+        <footer>
+          <div class="toolbar-actions">
+            <button class="btn btn-default modal-exit pull-right">OK</button>
+          </div>
+        </footer>
+      </dialog>
+      <!-- .toolbar-footer sits at the bottom of your app -->
+      <footer class="toolbar toolbar-footer">
+        <div id="footer-toolbar" class="toolbar-actions">
+          <button id="sensor-open" class="btn btn-default active">
+            <span class="icon icon-list-add"></span>
+          </button>
+        </div>
+      </footer>
+    </div>
+    <!-- You can also require other files to run in this process -->
+    <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="./assets/js/plotly.js"></script>
+    <script type="text/javascript" src="./assets/js/regression.min.js"></script>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
