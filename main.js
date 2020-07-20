@@ -1,3 +1,10 @@
+// handle setupevents as quickly as possible
+const setupEvents = require('./setupevents')
+if (setupEvents.handleSquirrelEvent()) {
+  // squirrel event handled and app will exit in 1000ms, so don't do anything else
+  return
+}
+
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, session } = require('electron')
 const os = require('os')
@@ -36,6 +43,7 @@ function createWindow() {
       enableRemoteModule: false, // turn off remote
       preload: path.join(__dirname, 'preload.js')
     },
+    icon: path.join(__dirname, 'Icon.png'),
     'min-width': 500,
     'min-height': 200,
     'accept-first-mouse': true,
