@@ -24,6 +24,7 @@ $(document).ready(function () {
   $("#window-app").hide();
   $("#container-experiment").hide();
   $("#container-preferences").hide();
+  $("#experiment-menu").hide();
   // Window ready to send to main process
   window.api.send("toMain", { state: "window is ready" });
   // Receive data event from main process
@@ -283,6 +284,7 @@ $(document).ready(function () {
   // Button event to navigate between menu list
   $(".nav-group-item").click(function (evt) {
     console.log("This .nav-group-item: ", $(this));
+    $("#experiment-menu").hide();
     $("#footer-toolbar").html("");
     $(".list-group-item").each(function () {
       $(this).removeClass("active");
@@ -303,6 +305,7 @@ $(document).ready(function () {
       });
     } else if ($(this)[0].id.split("-")[1] === "experiment") {
       window.api.send("toMain", { state: "experiment data" });
+      $("#experiment-menu").show();
       if ($("#menutab-data").hasClass("active")) {
         $("#tab-plot").hide();
         $("#tab-data").show();

@@ -1,24 +1,25 @@
 {
   "name": "electron-bidangmiring",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Bidang Miring Application",
   "main": "main.js",
   "scripts": {
     "postinstall": "electron-rebuild",
     "macbuild": "electron-packager . bidangmiring-apps --overwrite --platform=darwin --arch=x64 --prune=true --out=.build --icon=Icon.icns",
-    "win64build": "electron-packager . bidangmiring-apps --overwrite --platform=win32 --arch=x64 --icon=Icon.ico --version-string.CompanyName=4DSEdu --version-string.FileDescription=4DSEdu --version-string.ProductName=\"Bidang Miring Apps\" --prune=true --out=.build",
-    "win86build": "electron-packager . bidangmiring-apps --overwrite --platform=win32 --arch=ia32 --icon=Icon.ico --version-string.CompanyName=4DSEdu --version-string.FileDescription=4DSEdu --version-string.ProductName=\"Bidang Miring Apps\" --prune=true --out=.build",
+    "win64build": "electron-packager . bidangmiring-apps --overwrite --asar --platform=win32 --arch=x64 --icon=Icon.ico --version-string.CompanyName=4DSEdu --version-string.FileDescription=4DSEdu --version-string.ProductName=\"Bidang Miring Apps\" --prune=true --out=.build",
+    "win86build": "electron-packager . bidangmiring-apps --overwrite --asar --platform=win32 --arch=ia32 --icon=Icon.ico --version-string.CompanyName=4DSEdu --version-string.FileDescription=4DSEdu --version-string.ProductName=\"Bidang Miring Apps\" --prune=true --out=.build",
     "macpackage": "asar pack .build/bidangmiring-apps-darwin-x64/bidangmiring-apps.app/Contents/Resources/app .build/bidangmiring-apps-darwin-x64/bidangmiring-apps.app/Contents/Resources/app.asar && rm -rf .build/bidangmiring-apps-darwin-x64/bidangmiring-apps.app/Contents/Resources/app",
     "macdist": "electron-installer-dmg .build/bidangmiring-apps-darwin-x64/bidangmiring-apps.app bidangmiring-apps --out=.build --overwrite --icon=Icon.icns",
     "win64dist": "node createinstaller64",
     "win86dist": "node createinstaller86",
+    "test": "jest",
     "start": "electron ."
   },
   "keywords": [
-    "Electron",
-    "pcsclite",
-    "reader",
-    "demo"
+    "electron",
+    "serialport",
+    "regression",
+    "gelinding"
   ],
   "author": "prajadimas",
   "license": "CC0-1.0",
@@ -28,7 +29,9 @@
     "electron-installer-dmg": "^3.0.0",
     "electron-packager": "^15.0.0",
     "electron-rebuild": "^1.11.0",
-    "electron-winstaller": "^4.0.0"
+    "electron-winstaller": "^4.0.0",
+    "jest": "^26.1.0",
+    "spectron": "^11.1.0"
   },
   "dependencies": {
     "electron-log": "^4.2.2",
